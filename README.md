@@ -33,7 +33,7 @@ Las suyas: las siete de su «Porfolio» (cuadradas, sin recortar), la mampara y 
 Con el kit del taller (Chrome headless por DevTools):
 - **El hero cabe entero en los 17 tamaños**, de 320×568 a 2560×1440, también en móvil apaisado y descontando la barra fija.
 - Sin desbordamiento horizontal en ningún ancho, y las fotos del cliente a su proporción (10/10).
-- **70 pruebas de interacción con ratón, clics y teclado reales**, todas en verde: persiana y mando, horario en seis momentos de la semana, fachada, averías, visor, opiniones, formulario, menú del móvil y movimiento reducido. Incluyen 21 botones con el cursor quieto 2,5 s: ninguno se queda pillado.
+- **62 pruebas de interacción con ratón, clics y teclado reales**, todas en verde: persiana y mando, horario en seis momentos de la semana, fachada, averías, visor, opiniones, formulario, menú del móvil y movimiento reducido. Incluyen 21 botones con el cursor quieto 2,5 s: ninguno se queda pillado.
 - Cero errores de JavaScript, y solo se animan `transform` y `opacity`.
 - Con `prefers-reduced-motion`, nada se mueve y el mando funciona al instante.
 
