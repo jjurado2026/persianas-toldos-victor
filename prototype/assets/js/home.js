@@ -1,7 +1,8 @@
 /* =====================================================================
-   Persianas y Toldos Víctor · home
-   Persiana con mando, fachada de productos, averías, visor de trabajos,
-   opiniones, horario en vivo y formulario que deja el correo escrito.
+   Persianas y Toldos Víctor · home (ronda 2)
+   Hero con su foto hecha persiana (lamas 3D que giran y se inclinan con el cursor),
+   botones de rodillo, cintas en movimiento, fachada de servicios, averías,
+   paletas de 1963, preguntas en lamas, horario en vivo y formulario.
    Parámetros: ?ss (capturas, quieto) · ?ahora=1-10.5 (día 0-6 y hora) · ?caducada
    ===================================================================== */
 (() => {
@@ -13,6 +14,20 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const espera = ms => new Promise(r => setTimeout(r, ms));
   const reflujo = el => el.getBoundingClientRect();
+  const raton = matchMedia('(hover: hover) and (pointer: fine)');
+
+  /* ── Botones de rodillo: el texto en dos caras de un prisma que gira ─ */
+  $$('.boton').forEach(b => {
+    const html = b.innerHTML.trim();
+    b.innerHTML = `<span class="boton__rodillo"><span class="boton__cara">${html}</span><span class="boton__cara boton__cara--b" aria-hidden="true">${html}</span></span>`;
+    b.classList.add('listo');
+  });
+
+  /* ── Títulos: palabra a palabra ───────────────────────────────────── */
+  $$('.titulo').forEach(t => {
+    let i = 0;
+    t.innerHTML = t.textContent.trim().split(/\s+/).map(w => `<span class="palabra" style="--i:${i++}">${w}</span>`).join(' ');
+  });
 
   /* ── Hora de Madrid y horario ─────────────────────────────────────── */
   const HORARIO = { 1: [[9, 13.5], [17, 19.5]], 2: [[9, 13.5], [17, 19.5]], 3: [[9, 13.5], [17, 19.5]], 4: [[9, 13.5], [17, 19.5]], 5: [[9, 14]], 6: [], 0: [] };
@@ -27,7 +42,6 @@
     for (const p of f.formatToParts(new Date())) o[p.type] = p.value;
     return { dia: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(o.weekday), h: (+o.hour % 24) + (+o.minute) / 60 };
   }
-
   function estadoTienda() {
     const { dia, h } = madrid();
     const tramo = HORARIO[dia].find(([a, b]) => h >= a && h < b);
@@ -35,14 +49,10 @@
     for (let k = 0; k < 8; k++) {
       const dd = (dia + k) % 7;
       const sig = HORARIO[dd].find(([a]) => k > 0 || a > h);
-      if (sig) {
-        const cuando = k === 0 ? 'hoy' : k === 1 ? 'mañana' : `el ${DIAS[dd]}`;
-        return { abierto: false, txt: `Cerrado. Abrimos ${cuando} a las ${hora(sig[0])}`, dia, h };
-      }
+      if (sig) return { abierto: false, txt: `Cerrado. Abrimos ${k === 0 ? 'hoy' : k === 1 ? 'mañana' : `el ${DIAS[dd]}`} a las ${hora(sig[0])}`, dia, h };
     }
     return { abierto: false, txt: 'Cerrado', dia, h };
   }
-
   function pintarEstado() {
     const e = estadoTienda();
     $$('[data-estado]').forEach(el => {
@@ -60,14 +70,19 @@
   setInterval(pintarEstado, 60000);
 
   /* ── «En vista» y bucles en pausa fuera de pantalla ──────────────── */
-  const vistos = $$('.titulo, .fachada, .trabajos__rejilla, .oficio__texto, .pasos, .horario');
+  const alVer = new Map();
+  const vistos = $$('.titulo, .fachada, .taller, .experiencia__rejilla, .trabajos__rejilla, .horario, .lamas-faq');
   if (quieto || !('IntersectionObserver' in window)) vistos.forEach(el => el.classList.add('en-vista'));
   else {
     const io = new IntersectionObserver(es => es.forEach(en => {
-      if (en.isIntersecting) { en.target.classList.add('en-vista'); io.unobserve(en.target); }
+      if (!en.isIntersecting) return;
+      en.target.classList.add('en-vista');
+      io.unobserve(en.target);
+      (alVer.get(en.target) || []).forEach(f => f());
     }), { rootMargin: '0px 0px -12% 0px', threshold: .12 });
     vistos.forEach(el => io.observe(el));
   }
+  const cuandoSeVea = (el, f) => { if (el.classList.contains('en-vista')) f(); else alVer.set(el, [...(alVer.get(el) || []), f]); };
   const visibles = new Set();
   if (!quieto && 'IntersectionObserver' in window) {
     const ioBucle = new IntersectionObserver(es => es.forEach(en => {
@@ -91,154 +106,151 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { menuAbierto(false); botonMenu.focus(); } });
   matchMedia('(min-width: 900px)').addEventListener('change', e => { if (e.matches) menuAbierto(false); });
 
-  /* ── 1 · Persiana con mando ───────────────────────────────────────── */
+  /* ── 1 · Hero: su foto hecha persiana ─────────────────────────────── */
   const hero = $('.hero');
-  const ventana = $('#ventana');
-  const persiana = $('#persiana');
-  const pano = $('.persiana__pano');
-  const mando = $('.mando');
-  const botonesMando = $$('[data-mando]');
-  const fotos = $$('.ventana__foto');
-  const pie = $('#ventana-pie');
-  const N = 18, REPOSO = .23, VEL = 1 / 2.4;           // la persiana recorre la ventana entera en 2,4 s
-  let cubre = quieto ? .26 : 1;                       // 0 = subida del todo · 1 = bajada del todo
-  let objetivo = null, raf = 0, ultimo = 0, alLlegar = null;
-  let fotoActual = 0, auto = !quieto, ultimaMano = 0;
+  const escena = $('#escena');
+  const capaLamas = $('#lamas');
+  const foto = $('#hero-foto');
+  let lamas = [], alto = 0, paso = 0, raf = 0, intro = null, enIntro = false;
+  const puntero = { activo: false, y: 0, vx: 0 };
+  const onda = { activa: false, desde: 0, t0: 0, dur: 2600 };
+  const gauss = x => Math.exp(-x * x);
+  const suave = t => 1 - Math.pow(1 - t, 3);
 
-  pano.classList.add('con-lamas');
-  for (let i = 0; i < N; i++) {
-    const l = document.createElement('span');
-    l.className = 'persiana__lama';
-    l.style.top = `${(i * 100) / N}%`;
-    l.style.transitionDelay = `${(N - 1 - i) * 16}ms`;
-    pano.insertBefore(l, pano.firstChild);
-  }
-  const pintar = () => { pano.style.transform = `translate3d(0, ${((cubre - 1) * 100).toFixed(3)}%, 0)`; };
-  if (cubre >= 1) persiana.classList.add('is-cerrada');
-  pintar();
-
-  function cargar(img) {
-    if (img.dataset.srcset) { img.srcset = img.dataset.srcset; delete img.dataset.srcset; }
-    if (!img.getAttribute('src')) img.src = img.srcset.split(',').pop().trim().split(' ')[0].replace('-1280', '-960');
-    return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
-  }
-
-  async function siguienteFoto() {
-    const sig = (fotoActual + 1) % fotos.length;
-    await cargar(fotos[sig]);
-    fotos[fotoActual].classList.remove('is-actual');
-    fotos[sig].classList.add('is-actual');
-    fotoActual = sig;
-    pie.textContent = fotos[sig].dataset.pie;
-    pie.classList.remove('cambia'); reflujo(pie); pie.classList.add('cambia');
-    cargar(fotos[(sig + 1) % fotos.length]);
-  }
-
-  function marcarBotones() {
-    botonesMando.forEach(b => {
-      const m = b.dataset.mando;
-      b.classList.toggle('is-activo', objetivo !== null && ((m === 'subir' && objetivo < cubre) || (m === 'bajar' && objetivo > cubre)));
-    });
-  }
-
-  function senal() {
-    if (quieto) return;
-    [mando, ventana].forEach(el => el.classList.remove('is-envia', 'is-recibe'));
-    reflujo(mando);
-    mando.classList.add('is-envia'); ventana.classList.add('is-recibe');
-  }
-
-  function paso(t) {
-    const dt = Math.min(.12, (t - ultimo) / 1000);
-    ultimo = t;
-    const dir = Math.sign(objetivo - cubre);
-    cubre += dir * VEL * dt;
-    if (dir === 0 || (dir > 0 && cubre >= objetivo) || (dir < 0 && cubre <= objetivo)) {
-      cubre = objetivo; pintar(); raf = 0; llegar(); return;
+  function construir(conIntro) {
+    const src = foto.currentSrc || foto.src;
+    alto = escena.clientHeight;
+    const n = Math.max(8, Math.min(18, Math.round(alto / (innerWidth < 700 ? 44 : 56))));
+    paso = alto / n;
+    capaLamas.textContent = '';
+    lamas = [];
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement('div');
+      el.className = 'lama3d';
+      el.style.top = `${(i * paso).toFixed(2)}px`;
+      el.style.height = `${(paso + .8).toFixed(2)}px`;
+      el.innerHTML = `<div class="lama3d__cara"><div class="lama3d__foto" style="top:${(-i * paso).toFixed(2)}px;height:${alto}px;background-image:url('${src}')"></div><div class="lama3d__sombra"></div></div><div class="lama3d__cara lama3d__dorso"></div>`;
+      capaLamas.appendChild(el);
+      lamas.push({ el, sombra: $('.lama3d__sombra', el), a: conIntro ? 180 : 0, c: (i + .5) * paso });
     }
-    pintar();
-    raf = requestAnimationFrame(paso);
+    hero.classList.add('con-lamas');
+    lamas.forEach(l => pintar(l));
+    if (conIntro) { intro = performance.now() + 450; enIntro = true; }
+    arrancar();
   }
-
-  function llegar() {
-    const fin = objetivo, cb = alLlegar;
-    objetivo = null; alLlegar = null;
-    marcarBotones();
-    if (fin >= 1) {
-      persiana.classList.add('is-cerrada');
-      siguienteFoto();
+  function pintar(l) {
+    l.el.style.transform = `rotateX(${l.a.toFixed(2)}deg)`;
+    const s = Math.min(1, Math.abs(l.a > 90 ? 180 - l.a : l.a) / 42);
+    l.sombra.style.opacity = s.toFixed(3);
+  }
+  function arrancar() { if (!raf) raf = requestAnimationFrame(cuadro); }
+  function cuadro(t) {
+    raf = 0;
+    let vivo = false;
+    if (enIntro) {
+      lamas.forEach((l, i) => {
+        const p = Math.min(1, Math.max(0, (t - intro - i * 65) / 1100));
+        l.a = 180 * (1 - suave(p));
+        pintar(l);
+      });
+      if (t - intro > lamas.length * 65 + 1150) { enIntro = false; lamas.forEach(l => { l.a = 0; pintar(l); }); }
+      raf = requestAnimationFrame(cuadro);
+      return;
     }
-    if (cb) cb(true);
-  }
-
-  // Lleva la persiana a una altura; la promesa se resuelve al llegar (true) o si se para antes (false)
-  function irA(valor) {
-    if (alLlegar) { const cb = alLlegar; alLlegar = null; cb(false); }
-    return new Promise(res => {
-      persiana.classList.remove('is-cerrada');
-      objetivo = valor; alLlegar = res;
-      marcarBotones();
-      if (quieto) { cubre = valor; pintar(); llegar(); return; }
-      if (!raf) { ultimo = performance.now(); raf = requestAnimationFrame(paso); }
-    });
-  }
-  function parar() {
-    if (raf) cancelAnimationFrame(raf);
-    raf = 0; objetivo = null;
-    if (alLlegar) { const cb = alLlegar; alLlegar = null; cb(false); }
-    marcarBotones();
-  }
-
-  botonesMando.forEach(b => b.addEventListener('click', () => {
-    ultimaMano = Date.now();
-    auto = false;
-    mando.classList.add('usado');
-    senal();
-    const m = b.dataset.mando;
-    if (m === 'parar') parar();
-    else irA(m === 'subir' ? 0 : 1);
-  }));
-
-  // Recorrido solo: sube al abrir; cada pocos segundos baja, cambia de trabajo y vuelve a subir.
-  // Se para fuera de pantalla y cuando se usa el mando; vuelve tras 25 s sin tocarlo.
-  async function esperaVisible(ms) {
-    let t = 0;
-    while (t < ms) { await espera(250); if (enPantalla(hero) && !document.hidden) t += 250; }
-  }
-  async function recorrido() {
-    while (true) {
-      await esperaVisible(6500);
-      if (!auto) {
-        if (Date.now() - ultimaMano > 25000 && objetivo === null) { auto = true; mando.classList.remove('usado'); }
-        continue;
-      }
-      if (!(await irA(1)) || !auto) continue;
-      await espera(650);
-      if (!auto) continue;
-      await irA(REPOSO);
+    let yOnda = null;
+    if (onda.activa) {
+      const p = (t - onda.t0) / onda.dur;
+      if (p >= 1) onda.activa = false;
+      else yOnda = onda.desde + (alto + 2 * paso - onda.desde) * suave(p);
     }
+    for (const l of lamas) {
+      let obj = 0;
+      if (puntero.activo) obj += 36 * gauss((l.c - puntero.y) / (1.35 * paso));
+      if (yOnda !== null) obj += 26 * gauss((l.c - yOnda) / (1.7 * paso));
+      l.a += (obj - l.a) * .13;
+      if (Math.abs(obj - l.a) > .04 || Math.abs(l.a) > .04) vivo = true; else l.a = obj;
+      pintar(l);
+    }
+    if (vivo || puntero.activo || onda.activa) raf = requestAnimationFrame(cuadro);
+  }
+  function lanzarOnda(desdeY) {
+    if (enIntro || !lamas.length) return;
+    onda.activa = true; onda.t0 = performance.now(); onda.desde = desdeY ?? -2 * paso;
+    arrancar();
   }
   if (!quieto) {
-    const arranque = async () => {
-      await espera(700);
-      senal();
-      await irA(REPOSO);
-      recorrido();
-    };
-    (document.fonts ? document.fonts.ready : Promise.resolve()).then(arranque);
-    // La siguiente foto, ya cargada para el primer cambio
-    window.addEventListener('load', () => cargar(fotos[1]), { once: true });
+    const iniciar = () => construir(true);
+    if (foto.complete && foto.naturalWidth) iniciar(); else foto.addEventListener('load', iniciar, { once: true });
+    hero.addEventListener('pointermove', e => {
+      if (e.pointerType === 'touch' || enIntro) return;
+      const r = escena.getBoundingClientRect();
+      if (e.clientY > r.bottom) { puntero.activo = false; return; }
+      puntero.activo = true; puntero.y = e.clientY - r.top;
+      if (!hero.classList.contains('usada')) { clearTimeout(hero._u); hero._u = setTimeout(() => hero.classList.add('usada'), 1200); }
+      arrancar();
+    });
+    hero.addEventListener('pointerleave', () => { puntero.activo = false; arrancar(); });
+    escena.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'touch') return;
+      hero.classList.add('usada');
+      lanzarOnda(e.clientY - escena.getBoundingClientRect().top);
+    });
+    setInterval(() => { if (!puntero.activo && enPantalla(hero) && !document.hidden) lanzarOnda(); }, 6500);
+    let rz = 0, ancho = innerWidth;
+    addEventListener('resize', () => {
+      clearTimeout(rz);
+      rz = setTimeout(() => { if (lamas.length && (innerWidth !== ancho || Math.abs(escena.clientHeight - alto) > 2)) { ancho = innerWidth; construir(false); } }, 220);
+    });
   }
 
-  /* ── 2 · Fachada de productos ─────────────────────────────────────── */
+  /* ── Cintas en movimiento constante (servicios, ofertas, opiniones) ── */
+  function cinta(el) {
+    if (quieto) return;
+    const pista = $('.cinta__pista', el);
+    const originales = [...pista.children];
+    const clonar = () => {
+      const f = document.createDocumentFragment();
+      originales.forEach(o => {
+        const c = o.cloneNode(true);
+        c.setAttribute('aria-hidden', 'true');
+        c.setAttribute('data-clon', '');
+        c.inert = true;
+        c.removeAttribute('id');
+        $$('[id]', c).forEach(x => x.removeAttribute('id'));
+        if (c.matches('button, a')) c.tabIndex = -1;
+        $$('a, button', c).forEach(x => { x.tabIndex = -1; });
+        f.appendChild(c);
+      });
+      pista.appendChild(f);
+    };
+    const medir = () => {
+      $$('[data-clon]', pista).forEach(c => c.remove());
+      clonar();
+      const primerClon = pista.children[originales.length];
+      const w = primerClon.offsetLeft - originales[0].offsetLeft;
+      let total = pista.scrollWidth;
+      while (total < w + el.clientWidth + 40) { clonar(); total = pista.scrollWidth; }
+      el.style.setProperty('--w', `${w}px`);
+      el.style.setProperty('--dur', `${(w / (+el.dataset.velocidad || 40)).toFixed(1)}s`);
+      el.classList.add('lista');
+    };
+    medir();
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(medir);
+    let t = 0;
+    addEventListener('resize', () => { clearTimeout(t); t = setTimeout(medir, 250); });
+  }
+
+  /* ── 2 · Fachada de servicios ─────────────────────────────────────── */
   const fachada = $('.fachada');
-  const pestanas = $$('.productos [role="tab"]');
+  const pistaServicios = $('.productos');
   const pins = $$('.pin');
   const fichas = $$('.ficha');
   const piezas = Object.fromEntries($$('[data-fz]').map(el => [el.dataset.fz, el]));
-  const orden = pestanas.map(t => t.dataset.producto);
-  let elegido = null, tour = !quieto, tourI = 0;
+  const orden = $$('[role="tab"]', pistaServicios).map(t => t.dataset.producto);
+  let tour = !quieto, tourI = 0;
   pins.forEach((p, i) => p.style.setProperty('--n', i));
+  const pestanas = () => $$('[data-producto]', pistaServicios);
+  const originalesServicios = $$('[role="tab"]', pistaServicios);
 
   function jugar(id) {
     if (quieto) return;
@@ -250,65 +262,57 @@
       clearTimeout(jugar.t); jugar.t = setTimeout(() => fachada.classList.remove('motor'), 3200);
     }
   }
-  $$('[data-fz]').forEach(el => el.addEventListener('animationend', e => { if (e.target === el || el.contains(e.target)) { if (!el.getAnimations || !el.getAnimations({ subtree: true }).length) el.classList.remove('juega'); } }));
-
-  function mostrarFicha(id) {
-    fichas.forEach(f => f.classList.toggle('is-visible', id ? f.id === `p-${id}` : f.id === 'p-inicio'));
-  }
+  $$('[data-fz]').forEach(el => el.addEventListener('animationend', () => { if (!el.getAnimations || !el.getAnimations({ subtree: true }).length) el.classList.remove('juega'); }));
+  const mostrarFicha = id => fichas.forEach(f => f.classList.toggle('is-visible', id ? f.id === `p-${id}` : f.id === 'p-inicio'));
   mostrarFicha(null);
 
   function elegir(id, { foco = false } = {}) {
     tour = false;
     pins.forEach(p => p.classList.remove('is-tour'));
-    pestanas.forEach(t => t.classList.remove('is-tour'));
-    elegido = id;
-    pestanas.forEach(t => {
-      const si = t.dataset.producto === id;
-      t.setAttribute('aria-selected', String(si));
-      t.tabIndex = si ? 0 : -1;
-      if (si && foco) t.focus();
-    });
+    pestanas().forEach(t => t.setAttribute('aria-selected', String(t.dataset.producto === id)));
+    originalesServicios.forEach(t => { t.tabIndex = t.dataset.producto === id ? 0 : -1; if (foco && t.dataset.producto === id) t.focus(); });
     pins.forEach(p => p.classList.toggle('is-activo', p.dataset.ir === id));
     mostrarFicha(id);
     jugar(id);
   }
-  pestanas.forEach((t, i) => {
+  originalesServicios.forEach((t, i) => {
     t.tabIndex = i === 0 ? 0 : -1;
-    t.addEventListener('click', () => elegir(t.dataset.producto));
     t.addEventListener('keydown', e => {
       const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-      if (k) { e.preventDefault(); const j = (pestanas.indexOf(t) + k + pestanas.length) % pestanas.length; elegir(pestanas[j].dataset.producto, { foco: true }); }
-      if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); elegir(pestanas[e.key === 'Home' ? 0 : pestanas.length - 1].dataset.producto, { foco: true }); }
+      if (!k) return;
+      e.preventDefault();
+      const j = (originalesServicios.indexOf(t) + k + originalesServicios.length) % originalesServicios.length;
+      elegir(originalesServicios[j].dataset.producto, { foco: true });
     });
   });
+  pistaServicios.addEventListener('click', e => { const b = e.target.closest('[data-producto]'); if (b) elegir(b.dataset.producto); });
   const pantallaAncha = matchMedia('(min-width: 1000px)');
   pins.forEach(p => p.addEventListener('click', () => {
     elegir(p.dataset.ir);
     if (!pantallaAncha.matches) $('.ficha-caja').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'nearest' });
   }));
-  $$('[data-ir]').forEach(a => { if (a.tagName === 'A') a.addEventListener('click', () => elegir(a.dataset.ir)); });
-
-  // Recorrido de la fachada mientras nadie elige: cada pieza se mueve por turnos
+  $$('a[data-ir]').forEach(a => a.addEventListener('click', () => elegir(a.dataset.ir)));
   (async () => {
     if (quieto) return;
     const seccion = $('#servicios');
     while (tour) {
-      await espera(3300);
+      await espera(fachada.classList.contains('en-vista') && tourI === 0 ? 900 : 3300);
       if (!tour || !enPantalla(seccion) || document.hidden || !fachada.classList.contains('en-vista')) continue;
       const id = orden[tourI++ % orden.length];
       pins.forEach(p => p.classList.toggle('is-tour', p.dataset.ir === id));
-      pestanas.forEach(t => t.classList.toggle('is-tour', t.dataset.producto === id));
       jugar(id);
     }
   })();
 
-  /* ── Botones «Pedir presupuesto de…»: rellenan el formulario ──────── */
+  /* ── Botones «Obtener presupuesto» de un servicio: lo dejan escrito ── */
   const form = $('#formulario');
-  $$('[data-pedir]').forEach(a => a.addEventListener('click', () => {
-    const que = form.querySelector(`input[name="que"][value="${a.dataset.pedir}"]`);
-    if (que) que.checked = true;
-    if (a.dataset.donde) { const r = form.querySelector(`input[name="donde"][value="${a.dataset.donde}"]`); if (r) r.checked = true; }
-  }));
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-pedir]');
+    if (!a) return;
+    const ta = form.consulta;
+    const linea = `Quiero presupuesto de: ${a.dataset.pedir}.`;
+    if (!ta.value.includes(linea)) ta.value = ta.value ? `${ta.value.trim()}\n${linea}` : linea;
+  });
 
   /* ── 3 · Averías ──────────────────────────────────────────────────── */
   const AVERIAS = {
@@ -321,9 +325,9 @@
   };
   const anatomia = $('#anatomia');
   const diag = $('[data-diagnostico]');
-  const opcionesAveria = $$('[data-averia]').filter(b => b.tagName === 'BUTTON');
+  const averias = $$('.averia');
   function averia(id, foco) {
-    opcionesAveria.forEach(b => {
+    averias.forEach(b => {
       const si = b.dataset.averia === id;
       b.setAttribute('aria-checked', String(si));
       b.tabIndex = si ? 0 : -1;
@@ -332,20 +336,51 @@
     anatomia.dataset.averia = id;
     diag.innerHTML = AVERIAS[id];
     diag.classList.remove('cambia'); reflujo(diag); diag.classList.add('cambia');
+    $('.diagnostico [data-pedir]').dataset.pedir = `reparación (${$(`.averia[data-averia="${id}"] .averia__txt`).textContent.toLowerCase()})`;
   }
-  opcionesAveria.forEach((b, i) => {
+  averias.forEach((b, i) => {
     b.tabIndex = i === 0 ? 0 : -1;
     b.addEventListener('click', () => averia(b.dataset.averia));
     b.addEventListener('keydown', e => {
       const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
       if (!k) return;
       e.preventDefault();
-      const j = (opcionesAveria.indexOf(b) + k + opcionesAveria.length) % opcionesAveria.length;
-      averia(opcionesAveria[j].dataset.averia, true);
+      averia(averias[(averias.indexOf(b) + k + averias.length) % averias.length].dataset.averia, true);
     });
   });
 
-  /* ── 5 · Visor de trabajos ────────────────────────────────────────── */
+  /* ── 5 · Paletas de 1963 ──────────────────────────────────────────── */
+  $$('[data-paleta]').forEach(el => {
+    const objetivo = [...el.dataset.paleta];
+    const celdas = objetivo.map(ch => {
+      const f = document.createElement('span');
+      f.className = 'flap';
+      f.innerHTML = '<span class="flap__arriba"><i></i></span><span class="flap__abajo"><i></i></span><span class="flap__hoja-a"><i></i></span><span class="flap__hoja-b"><i></i></span>';
+      $$('i', f).forEach(x => { x.textContent = ch; });
+      f.dataset.v = ch;
+      el.appendChild(f);
+      return f;
+    });
+    if (quieto) return;
+    const cambiar = (f, ch) => {
+      const viejo = f.dataset.v;
+      const [arriba, abajo, ha, hb] = f.children;
+      arriba.firstChild.textContent = ch; hb.firstChild.textContent = ch;
+      ha.firstChild.textContent = viejo; abajo.firstChild.textContent = viejo;
+      f.classList.remove('gira'); reflujo(f); f.classList.add('gira');
+      f.dataset.v = ch;
+      clearTimeout(f._t); f._t = setTimeout(() => { abajo.firstChild.textContent = ch; }, 330);
+    };
+    const barajar = () => celdas.forEach((f, i) => {
+      const vueltas = 5 + i * 2;
+      for (let k = 0; k <= vueltas; k++) setTimeout(() => cambiar(f, k === vueltas ? objetivo[i] : String((+f.dataset.v + 1 + Math.floor(Math.random() * 3)) % 10)), k * 120);
+    });
+    const rejilla = el.closest('.experiencia__rejilla');
+    cuandoSeVea(rejilla, () => setTimeout(barajar, 500));
+    setInterval(() => { if (enPantalla($('#experiencia')) && !document.hidden) barajar(); }, 9000);
+  });
+
+  /* ── 6 · Visor de trabajos ────────────────────────────────────────── */
   const visor = $('#visor');
   const visorImg = $('#visor-img');
   const visorPie = $('#visor-pie');
@@ -364,47 +399,29 @@
     (pre.decode ? pre.decode() : Promise.resolve()).then(poner, poner);
     new Image().src = trabajos[(visorI + 1) % trabajos.length].src;
   }
-  $$('[data-visor]').forEach(b => b.addEventListener('click', () => {
-    origenVisor = b;
-    verTrabajo(+b.dataset.visor);
-    visor.showModal();
-  }));
+  $$('[data-visor]').forEach(b => b.addEventListener('click', () => { origenVisor = b; verTrabajo(+b.dataset.visor); visor.showModal(); }));
   $$('[data-visor-ir]').forEach(b => b.addEventListener('click', () => verTrabajo(visorI + +b.dataset.visorIr)));
   $('[data-visor-cerrar]').addEventListener('click', () => visor.close());
   visor.addEventListener('click', e => { if (e.target === visor || e.target.classList.contains('visor__dentro')) visor.close(); });
-  visor.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') verTrabajo(visorI + 1);
-    if (e.key === 'ArrowLeft') verTrabajo(visorI - 1);
-  });
+  visor.addEventListener('keydown', e => { if (e.key === 'ArrowRight') verTrabajo(visorI + 1); if (e.key === 'ArrowLeft') verTrabajo(visorI - 1); });
   visor.addEventListener('close', () => { if (origenVisor) origenVisor.focus(); });
 
-  /* ── 7 · Opiniones ────────────────────────────────────────────────── */
-  const seccionOpiniones = $('.opiniones');
-  const nombres = $$('[data-opinion]');
-  const citas = $$('.cita');
-  citas.forEach(c => {
-    const p = $('p', c);
-    let i = 0;
-    p.innerHTML = p.textContent.split(/(\s+)/).map(w => (/\S/.test(w) ? `<span class="palabra" style="--i:${i++}">${w}</span>` : w)).join('');
-  });
-  function opinion(i, foco) {
-    nombres.forEach((b, j) => { b.setAttribute('aria-selected', String(i === j)); b.tabIndex = i === j ? 0 : -1; if (i === j && foco) b.focus(); });
-    citas.forEach((c, j) => c.classList.toggle('is-visible', i === j));
-  }
-  opinion(0);
-  nombres.forEach((b, i) => {
-    b.addEventListener('click', () => opinion(i));
-    b.addEventListener('keydown', e => {
-      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-      if (k) { e.preventDefault(); opinion((i + k + nombres.length) % nombres.length, true); }
+  /* ── 9 · Preguntas: la lama gira y enseña la respuesta ────────────── */
+  const faq = $('.lamas-faq');
+  $$('.pregunta__b', faq).forEach(b => {
+    const r = $('.pregunta__cara--r', b), q = $('.pregunta__cara--q', b);
+    r.setAttribute('aria-hidden', 'true');
+    b.addEventListener('click', () => {
+      const abierta = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', String(abierta));
+      r.setAttribute('aria-hidden', String(!abierta));
+      q.setAttribute('aria-hidden', String(abierta));
     });
-    $('.opiniones__barra span', b).addEventListener('animationend', () => opinion((i + 1) % nombres.length));
   });
-  const pausar = si => seccionOpiniones.classList.toggle('pausa', si);
-  seccionOpiniones.addEventListener('pointerenter', () => pausar(true));
-  seccionOpiniones.addEventListener('pointerleave', () => pausar(seccionOpiniones.contains(document.activeElement)));
-  seccionOpiniones.addEventListener('focusin', () => pausar(true));
-  seccionOpiniones.addEventListener('focusout', e => { if (!seccionOpiniones.contains(e.relatedTarget)) pausar(false); });
+  cuandoSeVea(faq, () => setTimeout(() => faq.classList.add('listo'), 1500));
+
+  /* ── Cintas (después de los botones, para que los clones los lleven) ─ */
+  $$('[data-cinta]').forEach(cinta);
 
   /* ── 8 · Formulario: deja el correo escrito ───────────────────────── */
   const error = $('#formulario-error');
@@ -414,31 +431,28 @@
     const datos = new FormData(form);
     const nombre = (datos.get('nombre') || '').trim();
     const tel = (datos.get('telefono') || '').trim();
-    const faltan = [];
+    const email = (datos.get('email') || '').trim();
+    const consulta = (datos.get('consulta') || '').trim();
+    const telMal = tel.replace(/\D/g, '').length < 9;
+    const emailMal = email !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     form.nombre.setAttribute('aria-invalid', String(!nombre));
-    form.telefono.setAttribute('aria-invalid', String(tel.replace(/\D/g, '').length < 9));
+    form.telefono.setAttribute('aria-invalid', String(telMal));
+    form.email.setAttribute('aria-invalid', String(emailMal));
+    const faltan = [];
     if (!nombre) faltan.push('tu nombre');
-    if (tel.replace(/\D/g, '').length < 9) faltan.push('un teléfono de 9 cifras');
-    if (!form.privacidad.checked) faltan.push('aceptar la política de privacidad');
+    if (telMal) faltan.push('un teléfono de 9 cifras');
+    if (emailMal) faltan.push('un email válido');
+    if (!form.privacidad.checked) faltan.push('aceptar la Política de Privacidad');
     if (faltan.length) {
-      error.textContent = `Para poder llamarte falta ${faltan.join(', ').replace(/, ([^,]*)$/, ' y $1')}.`;
+      error.textContent = `Para poder contestarte falta ${faltan.join(', ').replace(/, ([^,]*)$/, ' y $1')}.`;
       error.hidden = false; ok.hidden = true;
-      (!nombre ? form.nombre : tel.replace(/\D/g, '').length < 9 ? form.telefono : form.privacidad).focus();
+      (!nombre ? form.nombre : telMal ? form.telefono : emailMal ? form.email : form.privacidad).focus();
       return;
     }
     error.hidden = true;
-    const que = datos.getAll('que');
-    const lineas = [
-      'Hola, quiero pedir presupuesto.', '',
-      `Qué necesito: ${que.length ? que.join(', ') : 'Os lo cuento por teléfono'}`,
-      datos.get('donde') ? `Dónde va: ${datos.get('donde')}` : '',
-      datos.get('medidas') ? `Medidas aproximadas: ${datos.get('medidas')}` : '',
-      datos.get('zona') ? `Barrio o población: ${datos.get('zona')}` : '',
-      '', `Nombre: ${nombre}`, `Teléfono: ${tel}`
-    ].filter((l, i, a) => l !== '' || (a[i - 1] !== '' && i > 0));
-    const asunto = `Presupuesto${que.length ? `: ${que.join(', ')}` : ''} (${nombre})`;
-    location.href = `mailto:persianasvictor.zz@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(lineas.join('\n'))}`;
+    const cuerpo = [`Nombre: ${nombre}`, `Teléfono: ${tel}`, email ? `Email: ${email}` : '', '', '¿Cómo podemos ayudarte?', consulta || '(Os lo cuento por teléfono)'].filter((l, i) => l !== '' || i === 3).join('\n');
+    location.href = `mailto:persianasvictor.zz@gmail.com?subject=${encodeURIComponent(`Pedir presupuesto (${nombre})`)}&body=${encodeURIComponent(cuerpo)}`;
     ok.hidden = false;
   });
-  $$('input', form).forEach(i => i.addEventListener('input', () => i.removeAttribute('aria-invalid')));
+  $$('input, textarea', form).forEach(i => i.addEventListener('input', () => i.removeAttribute('aria-invalid')));
 })();
