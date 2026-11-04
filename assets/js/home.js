@@ -1,7 +1,7 @@
 /* =====================================================================
-   Persianas y Toldos Víctor · home (ronda 2)
+   Persianas y Toldos Víctor · home (rondas 2 y 3)
    Hero con su foto hecha persiana (lamas 3D que giran y se inclinan con el cursor),
-   botones de rodillo, cintas en movimiento, fachada de servicios, averías,
+   botones de rodillo, cintas en movimiento, fachada de servicios con fichas que pasan solas,
    paletas de 1963, preguntas en lamas, horario en vivo y formulario.
    Parámetros: ?ss (capturas, quieto) · ?ahora=1-10.5 (día 0-6 y hora) · ?caducada
    ===================================================================== */
@@ -71,7 +71,7 @@
 
   /* ── «En vista» y bucles en pausa fuera de pantalla ──────────────── */
   const alVer = new Map();
-  const vistos = $$('.titulo, .fachada, .taller, .experiencia__rejilla, .trabajos__rejilla, .horario, .lamas-faq');
+  const vistos = $$('.titulo, .fachada, .experiencia__rejilla, .trabajos__rejilla, .horario, .lamas-faq');
   if (quieto || !('IntersectionObserver' in window)) vistos.forEach(el => el.classList.add('en-vista'));
   else {
     const io = new IntersectionObserver(es => es.forEach(en => {
@@ -240,17 +240,22 @@
     addEventListener('resize', () => { clearTimeout(t); t = setTimeout(medir, 250); });
   }
 
-  /* ── 2 · Fachada de servicios ─────────────────────────────────────── */
+  /* ── 2 · Nuestros servicios: la fachada y sus fichas, que pasan solas ─
+     Cada ficha se queda --paso (5,2 s; la barra del pie lo marca) y da paso a la siguiente.
+     Se para con el cursor encima. Al elegir uno (fachada, cinta o teclado), la ficha se queda
+     12 s y luego sigue sola. Lo que pasa solo no colorea ningún botón. */
+  const servicios = $('#servicios');
   const fachada = $('.fachada');
   const pistaServicios = $('.productos');
-  const pins = $$('.pin');
+  const zonas = $$('.zona');
   const fichas = $$('.ficha');
   const piezas = Object.fromEntries($$('[data-fz]').map(el => [el.dataset.fz, el]));
-  const orden = $$('[role="tab"]', pistaServicios).map(t => t.dataset.producto);
-  let tour = !quieto, tourI = 0;
-  pins.forEach((p, i) => p.style.setProperty('--n', i));
+  const orden = fichas.map(f => f.dataset.servicio);
   const pestanas = () => $$('[data-producto]', pistaServicios);
   const originalesServicios = $$('[role="tab"]', pistaServicios);
+  const PAUSA_ELEGIDO = 12000;
+  let actual = null, elegidoHasta = 0;
+  zonas.forEach((z, i) => z.style.setProperty('--n', i));
 
   function jugar(id) {
     if (quieto) return;
@@ -263,18 +268,53 @@
     }
   }
   $$('[data-fz]').forEach(el => el.addEventListener('animationend', () => { if (!el.getAnimations || !el.getAnimations({ subtree: true }).length) el.classList.remove('juega'); }));
-  const mostrarFicha = id => fichas.forEach(f => f.classList.toggle('is-visible', id ? f.id === `p-${id}` : f.id === 'p-inicio'));
-  mostrarFicha(null);
 
+  // La ficha que sale gira hacia un lado y la que entra llega del otro. Solo están en la página
+  // la visible, la que sale y la siguiente («prepara»: así su foto ya está cargada cuando entra)
+  function mostrar(id, { conPieza = true } = {}) {
+    const nueva = fichas.find(f => f.dataset.servicio === id);
+    if (!nueva.classList.contains('prepara')) { nueva.classList.add('prepara'); reflujo(nueva); }
+    const siguiente = fichas[(fichas.indexOf(nueva) + 1) % fichas.length];
+    fichas.forEach(f => f.classList.toggle('prepara', f === nueva || f === siguiente));
+    fichas.forEach(f => {
+      const si = f.dataset.servicio === id;
+      clearTimeout(f.t);
+      if (!si && f.classList.contains('is-visible')) { f.classList.add('sale'); f.t = setTimeout(() => f.classList.remove('sale'), 950); }
+      if (si) f.classList.remove('sale');
+      f.classList.toggle('is-visible', si);
+    });
+    zonas.forEach(z => z.classList.toggle('is-actual', z.dataset.ir === id));
+    actual = id;
+    if (conPieza) jugar(id);
+  }
+  function automatico(si) {
+    servicios.classList.toggle('auto', si);
+    if (si) pestanas().forEach(t => t.setAttribute('aria-selected', 'false'));
+  }
   function elegir(id, { foco = false } = {}) {
-    tour = false;
-    pins.forEach(p => p.classList.remove('is-tour'));
+    elegidoHasta = Date.now() + PAUSA_ELEGIDO;
+    automatico(false);
     pestanas().forEach(t => t.setAttribute('aria-selected', String(t.dataset.producto === id)));
     originalesServicios.forEach(t => { t.tabIndex = t.dataset.producto === id ? 0 : -1; if (foco && t.dataset.producto === id) t.focus(); });
-    pins.forEach(p => p.classList.toggle('is-activo', p.dataset.ir === id));
-    mostrarFicha(id);
-    jugar(id);
+    if (id === actual) jugar(id); else mostrar(id);
   }
+  mostrar(orden[0], { conPieza: false });
+  if (!quieto) {
+    automatico(true);
+    cuandoSeVea(fachada, () => setTimeout(() => jugar(actual), 700));
+    // Al acabar la barra del pie, la siguiente
+    servicios.addEventListener('animationend', e => {
+      if (e.animationName !== 'progreso' || !servicios.classList.contains('auto')) return;
+      mostrar(orden[(orden.indexOf(actual) + 1) % orden.length]);
+    });
+    // Pasado el rato tras elegir uno, y con el cursor fuera, vuelve a pasar solo
+    setInterval(() => {
+      if (servicios.classList.contains('auto') || Date.now() < elegidoHasta) return;
+      if ((raton.matches && fachada.matches(':hover')) || servicios.querySelector(':focus-visible')) return;
+      automatico(true);
+    }, 1000);
+  }
+
   originalesServicios.forEach((t, i) => {
     t.tabIndex = i === 0 ? 0 : -1;
     t.addEventListener('keydown', e => {
@@ -286,23 +326,17 @@
     });
   });
   pistaServicios.addEventListener('click', e => { const b = e.target.closest('[data-producto]'); if (b) elegir(b.dataset.producto); });
+  // La fachada: cada pieza se elige con un clic; al mover el cursor por ella, se mueve
   const pantallaAncha = matchMedia('(min-width: 1000px)');
-  pins.forEach(p => p.addEventListener('click', () => {
-    elegir(p.dataset.ir);
-    if (!pantallaAncha.matches) $('.ficha-caja').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'nearest' });
-  }));
+  zonas.forEach(z => {
+    z.addEventListener('click', () => {
+      elegir(z.dataset.ir);
+      if (!pantallaAncha.matches) $('.ficha-caja').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'nearest' });
+    });
+    z.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !z.jugada) { z.jugada = true; if (z.dataset.ir !== actual) jugar(z.dataset.ir); } });
+    z.addEventListener('pointerleave', () => { z.jugada = false; });
+  });
   $$('a[data-ir]').forEach(a => a.addEventListener('click', () => elegir(a.dataset.ir)));
-  (async () => {
-    if (quieto) return;
-    const seccion = $('#servicios');
-    while (tour) {
-      await espera(fachada.classList.contains('en-vista') && tourI === 0 ? 900 : 3300);
-      if (!tour || !enPantalla(seccion) || document.hidden || !fachada.classList.contains('en-vista')) continue;
-      const id = orden[tourI++ % orden.length];
-      pins.forEach(p => p.classList.toggle('is-tour', p.dataset.ir === id));
-      jugar(id);
-    }
-  })();
 
   /* ── Botones «Obtener presupuesto» de un servicio: lo dejan escrito ── */
   const form = $('#formulario');
@@ -314,42 +348,7 @@
     if (!ta.value.includes(linea)) ta.value = ta.value ? `${ta.value.trim()}\n${linea}` : linea;
   });
 
-  /* ── 3 · Averías ──────────────────────────────────────────────────── */
-  const AVERIAS = {
-    cinta: '<strong>Cinta rota.</strong> Cambiamos la cinta y, si hace falta, el recogedor. Es la avería más habitual.',
-    atascada: '<strong>No sube o no baja.</strong> Suele ser el eje, un rodamiento o una lama atascada en la guía. Te decimos qué es antes de cambiar nada.',
-    caida: '<strong>Caída dentro del cajón.</strong> No tires más de la cinta. Abrimos el cajón y la volvemos a enganchar al eje.',
-    lamas: '<strong>Lamas rotas o torcidas.</strong> Cambiamos solo las lamas dañadas, o el paño entero si el sol lo ha castigado.',
-    motor: '<strong>El motor no responde.</strong> Revisamos motor, mando y pulsador. Si hay que cambiarlo, te damos opciones.',
-    dura: '<strong>Va dura o hace ruido.</strong> Limpiamos y ajustamos guías y eje para que vuelva a correr suave.'
-  };
-  const anatomia = $('#anatomia');
-  const diag = $('[data-diagnostico]');
-  const averias = $$('.averia');
-  function averia(id, foco) {
-    averias.forEach(b => {
-      const si = b.dataset.averia === id;
-      b.setAttribute('aria-checked', String(si));
-      b.tabIndex = si ? 0 : -1;
-      if (si && foco) b.focus();
-    });
-    anatomia.dataset.averia = id;
-    diag.innerHTML = AVERIAS[id];
-    diag.classList.remove('cambia'); reflujo(diag); diag.classList.add('cambia');
-    $('.diagnostico [data-pedir]').dataset.pedir = `reparación (${$(`.averia[data-averia="${id}"] .averia__txt`).textContent.toLowerCase()})`;
-  }
-  averias.forEach((b, i) => {
-    b.tabIndex = i === 0 ? 0 : -1;
-    b.addEventListener('click', () => averia(b.dataset.averia));
-    b.addEventListener('keydown', e => {
-      const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-      if (!k) return;
-      e.preventDefault();
-      averia(averias[(averias.indexOf(b) + k + averias.length) % averias.length].dataset.averia, true);
-    });
-  });
-
-  /* ── 5 · Paletas de 1963 ──────────────────────────────────────────── */
+  /* ── 4 · Paletas de 1963 ──────────────────────────────────────────── */
   $$('[data-paleta]').forEach(el => {
     const objetivo = [...el.dataset.paleta];
     const celdas = objetivo.map(ch => {
@@ -380,7 +379,7 @@
     setInterval(() => { if (enPantalla($('#experiencia')) && !document.hidden) barajar(); }, 9000);
   });
 
-  /* ── 6 · Visor de trabajos ────────────────────────────────────────── */
+  /* ── 5 · Visor de trabajos ────────────────────────────────────────── */
   const visor = $('#visor');
   const visorImg = $('#visor-img');
   const visorPie = $('#visor-pie');
@@ -406,7 +405,7 @@
   visor.addEventListener('keydown', e => { if (e.key === 'ArrowRight') verTrabajo(visorI + 1); if (e.key === 'ArrowLeft') verTrabajo(visorI - 1); });
   visor.addEventListener('close', () => { if (origenVisor) origenVisor.focus(); });
 
-  /* ── 9 · Preguntas: la lama gira y enseña la respuesta ────────────── */
+  /* ── 8 · Preguntas: la lama gira y enseña la respuesta ────────────── */
   const faq = $('.lamas-faq');
   $$('.pregunta__b', faq).forEach(b => {
     const r = $('.pregunta__cara--r', b), q = $('.pregunta__cara--q', b);
@@ -423,7 +422,7 @@
   /* ── Cintas (después de los botones, para que los clones los lleven) ─ */
   $$('[data-cinta]').forEach(cinta);
 
-  /* ── 8 · Formulario: deja el correo escrito ───────────────────────── */
+  /* ── 7 · Formulario: deja el correo escrito ───────────────────────── */
   const error = $('#formulario-error');
   const ok = $('#formulario-ok');
   form.addEventListener('submit', e => {

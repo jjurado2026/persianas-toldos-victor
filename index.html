@@ -51,8 +51,8 @@
 <link rel="preload" href="assets/fonts/clash-display-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/img/hero-toldo-1440.webp" imagesrcset="assets/img/hero-toldo-960.webp 960w, assets/img/hero-toldo-1440.webp 1440w, assets/img/hero-toldo-1920.webp 1920w, assets/img/hero-toldo-2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
-<link rel="stylesheet" href="assets/css/base.css?v=2">
-<link rel="stylesheet" href="assets/css/home.css?v=2">
+<link rel="stylesheet" href="assets/css/base.css?v=3">
+<link rel="stylesheet" href="assets/css/home.css?v=3">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -180,12 +180,12 @@
         <li><a href="#servicios" data-ir="estores"><span>Stores</span></a></li>
         <li><a href="#servicios" data-ir="ventanas"><span>Ventanas</span></a></li>
         <li><a href="#servicios" data-ir="mamparas"><span>Mamparas</span></a></li>
-        <li><a href="#reparaciones"><span>Reparación</span></a></li>
+        <li><a href="#presupuesto" data-pedir="Reparación"><span>Reparación</span></a></li>
       </ul>
     </nav>
   </section>
 
-  <!-- 2 · NUESTROS SERVICIOS: la fachada ─────────────────────────────── -->
+  <!-- 2 · NUESTROS SERVICIOS: la fachada y sus fichas, que pasan solas ──── -->
   <section class="servicios" id="servicios" aria-labelledby="servicios-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -194,7 +194,7 @@
       </header>
       <div class="fachada">
         <div class="fachada__lienzo" id="fachada">
-          <svg class="fachada__svg" viewBox="0 0 600 760" aria-hidden="true" focusable="false">
+          <svg class="fachada__svg" viewBox="0 34 600 726" aria-hidden="true" focusable="false">
             <defs>
               <pattern id="fz-lamas" width="10" height="7" patternUnits="userSpaceOnUse"><rect width="10" height="7" fill="#820933"/><rect y="5.6" width="10" height="1.4" fill="#560520"/><rect width="10" height=".9" fill="#A02150"/></pattern>
               <pattern id="fz-rayas" width="22" height="10" patternUnits="userSpaceOnUse"><rect width="22" height="10" fill="#F8FAF0"/><rect width="11" height="10" fill="#820933"/></pattern>
@@ -316,75 +316,110 @@
               <path d="M466 656h68M466 680h68" stroke="#2B1219" stroke-width="2.2"/>
             </g>
           </svg>
-          <div class="fachada__pins" aria-hidden="true">
-            <button type="button" tabindex="-1" class="pin" data-ir="toldos" aria-label="Toldos de terraza" style="--x:50%;--y:9.5%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="persianas" aria-label="Persianas" style="--x:25%;--y:29%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="motorizacion" aria-label="Motorización" style="--x:50%;--y:29%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="mosquiteras" aria-label="Mosquiteras" style="--x:75%;--y:29%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="stor" aria-label="Toldo stor de balcón" style="--x:37.5%;--y:47%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="estores" aria-label="Estores" style="--x:75%;--y:50%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="ventanas" aria-label="Ventanas" style="--x:25%;--y:69%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="mamparas" aria-label="Mamparas" style="--x:50%;--y:67.5%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="negocios" aria-label="Toldos para negocios" style="--x:36.5%;--y:91%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
-            <button type="button" tabindex="-1" class="pin" data-ir="rejas" aria-label="Rejas" style="--x:83.5%;--y:88%"><span class="pin__onda"></span><span class="pin__punto"></span></button>
+          <div class="fachada__zonas" aria-hidden="true">
+            <button type="button" tabindex="-1" class="zona zona--abajo" data-ir="toldos" aria-label="Toldos de terraza" style="--x:18.67%;--y:0.28%;--w:62.67%;--h:11.02%;--px:50.00%;--py:45.00%"><span class="zona__marco"></span><span class="zona__nombre">Toldos de terraza</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="persianas" aria-label="Persianas" style="--x:17.33%;--y:18.73%;--w:15.33%;--h:15.70%;--px:50.00%;--py:43.86%"><span class="zona__marco"></span><span class="zona__nombre">Persianas</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="motorizacion" aria-label="Motorización" style="--x:42.33%;--y:18.73%;--w:15.33%;--h:15.70%;--px:50.00%;--py:43.86%"><span class="zona__marco"></span><span class="zona__nombre">Motorización</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="mosquiteras" aria-label="Mosquiteras" style="--x:67.33%;--y:18.73%;--w:15.33%;--h:15.70%;--px:50.00%;--py:43.86%"><span class="zona__marco"></span><span class="zona__nombre">Mosquiteras</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="stor" aria-label="Toldo stor de balcón" style="--x:13.67%;--y:38.02%;--w:48.00%;--h:18.18%;--px:49.65%;--py:35.61%"><span class="zona__marco"></span><span class="zona__nombre">Toldo stor de balcón</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="estores" aria-label="Stores" style="--x:67.33%;--y:40.77%;--w:15.33%;--h:15.70%;--px:50.00%;--py:43.86%"><span class="zona__marco"></span><span class="zona__nombre">Stores</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="ventanas" aria-label="Ventanas" style="--x:16.00%;--y:60.06%;--w:18.00%;--h:15.70%;--px:50.00%;--py:47.37%"><span class="zona__marco"></span><span class="zona__nombre">Ventanas</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="mamparas" aria-label="Mamparas" style="--x:44.33%;--y:61.71%;--w:11.33%;--h:9.09%;--px:50.00%;--py:46.97%"><span class="zona__marco"></span><span class="zona__nombre">Mamparas</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="negocios" aria-label="Toldos para negocios" style="--x:9.33%;--y:77.69%;--w:54.67%;--h:20.66%;--px:49.70%;--py:62.67%"><span class="zona__marco"></span><span class="zona__nombre">Toldos para negocios</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
+            <button type="button" tabindex="-1" class="zona" data-ir="rejas" aria-label="Rejas" style="--x:76.33%;--y:81.82%;--w:14.00%;--h:11.29%;--px:51.19%;--py:50.00%"><span class="zona__marco"></span><span class="zona__nombre">Rejas</span><span class="pin"><span class="pin__onda"></span><span class="pin__punto"></span></span></button>
           </div>
         </div>
         <div class="ficha-caja">
-          <article class="ficha ficha--inicio" id="p-inicio">
-            <span class="ficha__mano" aria-hidden="true"><svg class="ico"><use href="#i-mano"/></svg></span>
-            <p class="ficha__aviso">Elige un punto de la fachada o un servicio de la cinta y te contamos cómo lo hacemos.</p>
-            <div class="ficha__botones"><a class="boton" href="#presupuesto"><span>Obtener presupuesto</span></a></div>
-          </article>
-          <article class="ficha" id="p-toldos" role="tabpanel" aria-labelledby="t-toldos" tabindex="0">
-              <figure class="ficha__foto"><img data-foto loading="lazy" src="assets/img/toldo-estampado-480.webp" srcset="assets/img/toldo-estampado-480.webp 480w, assets/img/toldo-estampado-720.webp 720w" sizes="(min-width: 1000px) 200px, 34vw" width="480" height="480" alt="Toldo plegable con lona estampada de hojas en un ático"></figure>
+          <article class="ficha" id="p-toldos" role="tabpanel" aria-labelledby="t-toldos" data-servicio="toldos">
+            <div class="ficha__foto"><img data-foto src="assets/img/toldo-estampado-720.webp" srcset="assets/img/toldo-estampado-480.webp 480w, assets/img/toldo-estampado-720.webp 720w, assets/img/toldo-estampado-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Toldo plegable con lona estampada de hojas en un ático"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Toldos de terraza</h3><p>Brazo extensible, punto recto o capota para terrazas y áticos. Lonas lisas, a rayas o estampadas.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Toldo"><span>Pedir presupuesto de toldo</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-stor" role="tabpanel" aria-labelledby="t-stor" tabindex="0">
-              <figure class="ficha__foto"><img data-foto loading="lazy" src="assets/img/stor-balcon-480.webp" srcset="assets/img/stor-balcon-480.webp 480w, assets/img/stor-balcon-720.webp 720w" sizes="(min-width: 1000px) 200px, 34vw" width="480" height="480" alt="Toldo stor instalado en un balcón"></figure>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Toldo"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-stor" role="tabpanel" aria-labelledby="t-stor" data-servicio="stor">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/stor-balcon-720.webp" srcset="assets/img/stor-balcon-480.webp 480w, assets/img/stor-balcon-720.webp 720w, assets/img/stor-balcon-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Toldo stor instalado en un balcón"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Toldo stor de balcón</h3><p>El toldo de los balcones de Valencia: baja por delante de la barandilla y se sujeta a ella. Con manivela o con motor.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Toldo"><span>Pedir presupuesto de stor</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-persianas" role="tabpanel" aria-labelledby="t-persianas" tabindex="0">
-              <figure class="ficha__foto"><img data-foto loading="lazy" src="assets/img/ventana-persiana-480.webp" srcset="assets/img/ventana-persiana-480.webp 480w, assets/img/ventana-persiana-720.webp 720w" sizes="(min-width: 1000px) 200px, 34vw" width="480" height="480" alt="Persiana con su cajón en una ventana de aluminio recién instalada"></figure>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Toldo stor"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-persianas" role="tabpanel" aria-labelledby="t-persianas" data-servicio="persianas">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/ventana-persiana-720.webp" srcset="assets/img/ventana-persiana-480.webp 480w, assets/img/ventana-persiana-720.webp 720w, assets/img/ventana-persiana-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Persiana con su cajón en una ventana de aluminio recién instalada"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Persianas</h3><p>De aluminio, PVC o seguridad. Nuevas, o cambiamos lamas, cinta y eje de la que ya tienes.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Persiana"><span>Pedir presupuesto de persiana</span></a><a class="boton boton--peq" href="#reparaciones"><svg class="ico" aria-hidden="true"><use href="#i-llave"/></svg><span>Está rota</span></a></div>
-            </article>
-            <article class="ficha" id="p-motorizacion" role="tabpanel" aria-labelledby="t-motorizacion" tabindex="0">
-              <div class="ficha__icono"><svg class="ico" aria-hidden="true"><use href="#i-mando"/></svg></div>
-              <div class="ficha__texto"><h3>Motorización</h3><p>Sube y baja persianas y toldos con un pulsador o un mando. También los que ya tienes: como la persiana de arriba.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Motorización"><span>Pedir presupuesto de motor</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-mosquiteras" role="tabpanel" aria-labelledby="t-mosquiteras" tabindex="0">
-              <div class="ficha__icono"><svg class="ico" aria-hidden="true"><use href="#i-red"/></svg></div>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Persiana"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-motorizacion" role="tabpanel" aria-labelledby="t-motorizacion" data-servicio="motorizacion">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/motorizacion-720.webp" srcset="assets/img/motorizacion-480.webp 480w, assets/img/motorizacion-720.webp 720w, assets/img/motorizacion-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Mano con el mando a distancia de una persiana motorizada"><span class="foto-sol" aria-hidden="true"></span>
+              <div class="ficha__texto"><h3>Motorización</h3><p>Sube y baja persianas y toldos con un pulsador o un mando. También los que ya tienes.</p></div>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Motorización"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-mosquiteras" role="tabpanel" aria-labelledby="t-mosquiteras" data-servicio="mosquiteras">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/mosquitera-720.webp" srcset="assets/img/mosquitera-480.webp 480w, assets/img/mosquitera-720.webp 720w, assets/img/mosquitera-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Atardecer visto a través de la malla de una mosquitera"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Mosquiteras</h3><p>Enrollables, correderas o fijas, a la medida de cada ventana. Te enseñamos las mallas en la tienda.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Mosquitera"><span>Pedir presupuesto de mosquitera</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-rejas" role="tabpanel" aria-labelledby="t-rejas" tabindex="0">
-              <div class="ficha__icono"><svg class="ico" aria-hidden="true"><use href="#i-reja"/></svg></div>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Mosquitera"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-rejas" role="tabpanel" aria-labelledby="t-rejas" data-servicio="rejas">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/reja-720.webp" srcset="assets/img/reja-480.webp 480w, assets/img/reja-720.webp 720w, assets/img/reja-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Ventana con reja de hierro y una jardinera con geranios"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Rejas</h3><p>Para ventanas y balcones a pie de calle, fijas o abatibles, a la medida del hueco.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Reja"><span>Pedir presupuesto de reja</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-estores" role="tabpanel" aria-labelledby="t-estores" tabindex="0">
-              <figure class="ficha__foto ficha__foto--apaisada"><img data-foto loading="lazy" src="assets/img/veneciana-460.webp" width="460" height="310" alt="Persiana veneciana en una ventana, con la mano que la ajusta"></figure>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Reja"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-estores" role="tabpanel" aria-labelledby="t-estores" data-servicio="estores">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/stores-720.webp" srcset="assets/img/stores-480.webp 480w, assets/img/stores-720.webp 720w, assets/img/stores-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Stores enrollables en las ventanas de un balcón"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Stores</h3><p>Enrollables, plisados o de paquete, y venecianas para dentro de casa.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Estor"><span>Pedir presupuesto de estor</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-ventanas" role="tabpanel" aria-labelledby="t-ventanas" tabindex="0">
-              <figure class="ficha__foto"><img data-foto loading="lazy" src="assets/img/ventana-persiana-480.webp" srcset="assets/img/ventana-persiana-480.webp 480w, assets/img/ventana-persiana-720.webp 720w" sizes="(min-width: 1000px) 200px, 34vw" width="480" height="480" alt="Ventana corredera de aluminio blanco recién instalada"></figure>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Stor"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-ventanas" role="tabpanel" aria-labelledby="t-ventanas" data-servicio="ventanas">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/ventana-corredera-720.webp" srcset="assets/img/ventana-corredera-480.webp 480w, assets/img/ventana-corredera-720.webp 720w, assets/img/ventana-corredera-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Ventana corredera de aluminio con vistas a los árboles"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Ventanas</h3><p>De aluminio y PVC, con su persiana y su mosquitera, montadas a la medida del hueco.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Ventana"><span>Pedir presupuesto de ventana</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
-            <article class="ficha" id="p-mamparas" role="tabpanel" aria-labelledby="t-mamparas" tabindex="0">
-              <figure class="ficha__foto"><img data-foto loading="lazy" src="assets/img/mampara-480.webp" srcset="assets/img/mampara-480.webp 480w, assets/img/mampara-720.webp 720w" sizes="(min-width: 1000px) 200px, 34vw" width="480" height="480" alt="Mampara fija de cristal templado en un plato de ducha"></figure>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Ventana"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-mamparas" role="tabpanel" aria-labelledby="t-mamparas" data-servicio="mamparas">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/mampara-720.webp" srcset="assets/img/mampara-480.webp 480w, assets/img/mampara-720.webp 720w, assets/img/mampara-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Mampara fija de cristal templado en un plato de ducha"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Mamparas</h3><p>De ducha y bañera, en cristal templado. La fija de ducha, desde 190&nbsp;€ en 48&nbsp;horas.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Mampara"><span>Pedir presupuesto de mampara</span></a><a class="boton boton--peq" href="#ofertas"><svg class="ico" aria-hidden="true"><use href="#i-euro"/></svg><span>Ver la oferta</span></a></div>
-            </article>
-            <article class="ficha" id="p-negocios" role="tabpanel" aria-labelledby="t-negocios" tabindex="0">
-              <figure class="ficha__foto"><img data-foto loading="lazy" src="assets/img/cerramiento-bar-480.webp" srcset="assets/img/cerramiento-bar-480.webp 480w, assets/img/cerramiento-bar-720.webp 720w" sizes="(min-width: 1000px) 200px, 34vw" width="480" height="480" alt="Cerramiento granate con ventanas para la terraza de un bar"></figure>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Mampara"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
+          <article class="ficha" id="p-negocios" role="tabpanel" aria-labelledby="t-negocios" data-servicio="negocios">
+            <div class="ficha__foto"><img data-foto loading="lazy" src="assets/img/cerramiento-bar-720.webp" srcset="assets/img/cerramiento-bar-480.webp 480w, assets/img/cerramiento-bar-720.webp 720w, assets/img/cerramiento-bar-960.webp 960w" sizes="(min-width: 1000px) 520px, (min-width: 600px) 520px, calc(100vw - 40px)" width="720" height="720" alt="Cerramiento granate con ventanas para la terraza de un bar"><span class="foto-sol" aria-hidden="true"></span>
               <div class="ficha__texto"><h3>Toldos para negocios</h3><p>Toldos y cerramientos para terrazas de bares y restaurantes, con ventanas de cristal y en el color de tu local.</p></div>
-              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Toldo" data-donde="Negocio"><span>Pedir presupuesto para mi local</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
-            </article>
+            </div>
+            <div class="ficha__pie">
+              <div class="ficha__botones"><a class="boton boton--peq" href="#presupuesto" data-pedir="Toldo para mi negocio"><span>Pedir presupuesto</span></a><a class="boton boton--peq" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar</span></a></div>
+              <span class="ficha__progreso" aria-hidden="true"><i></i></span>
+            </div>
+          </article>
         </div>
       </div>
     </div>
@@ -404,103 +439,7 @@
     </div>
   </section>
 
-  <!-- 3 · ¿SE TE HA ROTO LA PERSIANA? ────────────────────────────────── -->
-  <section class="reparar" id="reparaciones" aria-labelledby="reparar-titulo">
-    <div class="envoltura">
-      <header class="cabeza">
-        <h2 class="titulo" id="reparar-titulo">¿Se te ha roto la persiana?</h2>
-        <p>Dinos qué le pasa y te señalamos la pieza. Reparamos persianas y toldos, también los que no instalamos nosotros.</p>
-      </header>
-      <div class="taller" role="radiogroup" aria-label="¿Qué le pasa a tu persiana?">
-        <div class="taller__col">
-          <button type="button" class="averia" role="radio" aria-checked="false" data-averia="cinta"><span class="averia__ico" aria-hidden="true"><svg class="ico"><use href="#i-cinta"/></svg></span><span class="averia__txt">Se ha roto la cinta</span></button>
-          <button type="button" class="averia" role="radio" aria-checked="false" data-averia="atascada"><span class="averia__ico" aria-hidden="true"><svg class="ico"><use href="#i-atasco"/></svg></span><span class="averia__txt">No sube o no baja</span></button>
-          <button type="button" class="averia" role="radio" aria-checked="false" data-averia="caida"><span class="averia__ico" aria-hidden="true"><svg class="ico"><use href="#i-caida"/></svg></span><span class="averia__txt">Se ha caído dentro del cajón</span></button>
-        </div>
-        <figure class="taller__persiana">
-          <svg class="anatomia" id="anatomia" viewBox="0 0 440 500" role="img" aria-labelledby="anatomia-titulo">
-            <title id="anatomia-titulo">Una persiana por dentro: cajón, eje, polea, motor, cinta, recogedor, guías y lamas</title>
-            <defs>
-              <pattern id="an-lamas" width="10" height="20" patternUnits="userSpaceOnUse"><rect width="10" height="20" fill="#FFFFFF"/><rect width="10" height="3" fill="#FBF6F7"/><rect y="15" width="10" height="5" fill="#EAD9DE"/><rect y="19" width="10" height="1" fill="#C9A6B2"/></pattern>
-              <pattern id="an-rollo" width="8" height="7" patternUnits="userSpaceOnUse"><rect width="8" height="7" fill="#FFFFFF"/><rect y="5" width="8" height="2" fill="#E3CCD3"/></pattern>
-              <linearGradient id="an-cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E7EFCF"/><stop offset="1" stop-color="#F7F9EE"/></linearGradient>
-              <linearGradient id="an-cajon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A8496A"/><stop offset="1" stop-color="#820933"/></linearGradient>
-              <linearGradient id="an-guia" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D9BCC6"/><stop offset=".5" stop-color="#F3E6EA"/><stop offset="1" stop-color="#D9BCC6"/></linearGradient>
-              <clipPath id="an-hueco"><rect x="112" y="122" width="256" height="330"/></clipPath>
-            </defs>
-            <!-- marco y cristal -->
-            <rect x="100" y="114" width="280" height="346" rx="8" fill="#EBDCE1"/>
-            <rect x="112" y="122" width="256" height="330" fill="url(#an-cielo)"/>
-            <path d="M240 122v330" stroke="#DCC7CE" stroke-width="3"/>
-            <path d="M150 300l60-60M180 330l80-80" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".6"/>
-            <!-- paño de lamas -->
-            <g clip-path="url(#an-hueco)">
-              <g class="an-pano">
-                <rect x="112" y="122" width="256" height="200" fill="url(#an-lamas)"/>
-                <g class="an-lama-rota"><rect x="112" y="202" width="256" height="20" fill="#FFFFFF"/><rect x="112" y="217" width="256" height="5" fill="#EAD9DE"/></g>
-                <rect x="112" y="318" width="256" height="12" rx="2" fill="#C9A6B2"/>
-                <rect x="112" y="328" width="256" height="3" fill="#820933"/>
-              </g>
-            </g>
-            <!-- guías -->
-            <rect x="104" y="122" width="10" height="330" rx="3" fill="url(#an-guia)"/>
-            <rect x="366" y="122" width="10" height="330" rx="3" fill="url(#an-guia)"/>
-            <!-- alféizar -->
-            <rect x="86" y="456" width="308" height="14" rx="5" fill="#E2CDD4"/>
-            <!-- cajón abierto -->
-            <rect x="90" y="26" width="300" height="94" rx="14" fill="url(#an-cajon)"/>
-            <rect x="100" y="36" width="280" height="74" rx="10" fill="#5A0A26" opacity=".45"/>
-            <g class="an-eje"><rect x="136" y="44" width="220" height="58" rx="29" fill="url(#an-rollo)"/><rect x="118" y="68" width="250" height="10" rx="5" fill="#EBDCE1"/></g>
-            <g class="an-motor"><rect x="300" y="63" width="72" height="20" rx="10" fill="#2B1219"/><circle cx="362" cy="73" r="3.5" fill="#D4E79E"/></g>
-            <g class="an-polea"><circle cx="112" cy="73" r="20" fill="none" stroke="#F6EBEE" stroke-width="5"/><circle cx="112" cy="73" r="5" fill="#F6EBEE"/><path d="M112 55v36M94 73h36" stroke="#F6EBEE" stroke-width="2" opacity=".6"/></g>
-            <!-- cinta y recogedor -->
-            <g class="an-cinta">
-              <rect class="an-cinta__alta" x="88" y="84" width="7" height="160" rx="2" fill="#B98797"/>
-              <rect class="an-cinta__baja" x="88" y="252" width="7" height="104" rx="2" fill="#B98797"/>
-            </g>
-            <rect x="72" y="350" width="40" height="66" rx="9" fill="#820933"/>
-            <rect x="82" y="362" width="20" height="8" rx="3" fill="#F6EBEE"/>
-            <!-- ruido -->
-            <g class="an-ruido" stroke="#820933" stroke-width="3" fill="none" stroke-linecap="round">
-              <path d="M392 240q9 12 0 24M404 232q16 20 0 40"/><path d="M88 196q-9 12 0 24M76 188q-16 20 0 40"/>
-            </g>
-            <!-- resaltes: se encienden con la avería -->
-            <g class="an-h" fill="none" stroke="#820933" stroke-width="3" stroke-linejoin="round">
-              <rect class="an-h--cinta" x="80" y="80" width="23" height="282" rx="11"/>
-              <rect class="an-h--eje" x="128" y="38" width="236" height="70" rx="35"/>
-              <rect class="an-h--caida" x="106" y="118" width="268" height="218" rx="8"/>
-              <rect class="an-h--lamas" x="106" y="196" width="268" height="32" rx="8"/>
-              <rect class="an-h--motor" x="292" y="55" width="88" height="36" rx="18"/>
-              <path class="an-h--guias" d="M98 118h22v338H98zM360 118h22v338h-22z"/>
-            </g>
-            <!-- rótulos: solo se ve el de la pieza elegida -->
-            <g class="an-rotulos">
-              <g data-r="cinta"><rect x="6" y="276" width="70" height="30" rx="15"/><text x="41" y="296">Cinta</text></g>
-              <g data-r="eje"><rect x="170" y="-2" width="100" height="30" rx="15"/><text x="220" y="18">Eje</text></g>
-              <g data-r="caida"><rect x="170" y="-2" width="100" height="30" rx="15"/><text x="220" y="18">Eje y paño</text></g>
-              <g data-r="lamas"><rect x="370" y="196" width="68" height="30" rx="15"/><text x="404" y="216">Lamas</text></g>
-              <g data-r="motor"><rect x="300" y="-2" width="80" height="30" rx="15"/><text x="340" y="18">Motor</text></g>
-              <g data-r="guias"><rect x="374" y="282" width="62" height="30" rx="15"/><text x="405" y="302">Guías</text></g>
-            </g>
-          </svg>
-        </figure>
-        <div class="taller__col">
-          <button type="button" class="averia" role="radio" aria-checked="false" data-averia="lamas"><span class="averia__ico" aria-hidden="true"><svg class="ico"><use href="#i-lamas-rotas"/></svg></span><span class="averia__txt">Lamas rotas o torcidas</span></button>
-          <button type="button" class="averia" role="radio" aria-checked="false" data-averia="motor"><span class="averia__ico" aria-hidden="true"><svg class="ico"><use href="#i-motor"/></svg></span><span class="averia__txt">El motor no responde</span></button>
-          <button type="button" class="averia" role="radio" aria-checked="false" data-averia="dura"><span class="averia__ico" aria-hidden="true"><svg class="ico"><use href="#i-ruido"/></svg></span><span class="averia__txt">Va dura o hace ruido</span></button>
-        </div>
-      </div>
-      <div class="diagnostico" aria-live="polite">
-        <p class="diagnostico__txt" data-diagnostico>Elige lo que le pasa y la persiana te enseña la pieza. Toldos también: lonas, brazos, manivelas y motores.</p>
-        <div class="diagnostico__botones">
-          <a class="boton" href="tel:+34963413713"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span>Llamar para una reparación</span></a>
-          <a class="boton" href="#presupuesto" data-pedir="Reparación de persiana"><span>Pedir visita</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 · OFERTAS ──────────────────────────────────────────────────── -->
+  <!-- 3 · OFERTAS ──────────────────────────────────────────────────── -->
   <section class="ofertas" id="ofertas" aria-labelledby="ofertas-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -531,7 +470,7 @@
     </div>
   </section>
 
-  <!-- 5 · MÁS DE 60 AÑOS DE EXPERIENCIA ──────────────────────────────── -->
+  <!-- 4 · MÁS DE 60 AÑOS DE EXPERIENCIA ──────────────────────────────── -->
   <section class="experiencia" id="experiencia" aria-labelledby="experiencia-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -568,7 +507,7 @@
     </div>
   </section>
 
-  <!-- 6 · NUESTRO TRABAJO ──────────────────────────────────────────── -->
+  <!-- 5 · NUESTRO TRABAJO ──────────────────────────────────────────── -->
   <section class="trabajos" id="trabajos" aria-labelledby="trabajos-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -590,7 +529,7 @@
     </div>
   </section>
 
-  <!-- 7 · QUE OPINA LA GENTE DE NOSOTROS ──────────────────────────────── -->
+  <!-- 6 · QUE OPINA LA GENTE DE NOSOTROS ──────────────────────────────── -->
   <section class="opiniones" id="opiniones" aria-labelledby="opiniones-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -616,7 +555,7 @@
     </div>
   </section>
 
-  <!-- 8 · TE ASESORAMOS SIN COMPROMISO: presupuesto y tienda ───────────── -->
+  <!-- 7 · TE ASESORAMOS SIN COMPROMISO: presupuesto y tienda ───────────── -->
   <section class="contacto" id="presupuesto" aria-labelledby="presupuesto-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -672,7 +611,7 @@
     </div>
   </section>
 
-  <!-- 9 · PREGUNTAS FRECUENTES: lamas que giran ─────────────────────── -->
+  <!-- 8 · PREGUNTAS FRECUENTES: lamas que giran ─────────────────────── -->
   <section class="preguntas" id="preguntas" aria-labelledby="preguntas-titulo">
     <div class="envoltura">
       <header class="cabeza">
@@ -738,6 +677,6 @@
   </div>
 </dialog>
 
-<script src="assets/js/home.js?v=2" defer></script>
+<script src="assets/js/home.js?v=3" defer></script>
 </body>
 </html>

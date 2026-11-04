@@ -7,12 +7,14 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#820933">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/funnel-display.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/funnel-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/clash-display-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   /* Aviso de propuesta caducada: el texto del taller y la home entera en miniatura, que se recorre despacio */
-  @font-face { font-family: 'Funnel Display'; src: url('assets/fonts/funnel-display.woff2') format('woff2'); font-weight: 300 800; font-display: swap; }
-  @font-face { font-family: 'Funnel Sans'; src: url('assets/fonts/funnel-sans.woff2') format('woff2'); font-weight: 300 800; font-display: swap; }
+  @font-face { font-family: 'Clash Display'; src: url('assets/fonts/clash-display-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+  @font-face { font-family: 'Clash Display'; src: url('assets/fonts/clash-display-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+  @font-face { font-family: 'Satoshi'; src: url('assets/fonts/satoshi-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Satoshi'; src: url('assets/fonts/satoshi-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
   :root {
     --granate: #820933; --granate-hondo: #45091C; --tinta: #2B1219; --oliva: #767522; --lima: #D4E79E; --papel: #F8FAF0;
     --canal: clamp(16px, 5vw, 72px);
@@ -22,7 +24,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body { min-height: 100svh; display: grid; grid-template-rows: auto 1fr; background: var(--papel); color: var(--tinta);
-    font-family: 'Funnel Sans', 'Segoe UI', system-ui, sans-serif; font-size: clamp(1.0625rem, 1rem + .3vw, 1.25rem); line-height: 1.7;
+    font-family: 'Satoshi', 'Segoe UI', system-ui, sans-serif; font-size: clamp(1.0625rem, 1rem + .3vw, 1.25rem); line-height: 1.7;
     -webkit-font-smoothing: antialiased; overflow-x: clip; }
   img { display: block; max-width: 100%; height: auto; }
   :focus-visible { outline: 3px solid var(--oliva); outline-offset: 3px; border-radius: 3px; }
@@ -31,13 +33,13 @@
   .cab { position: relative; padding: clamp(16px, 3svh, 28px) var(--canal); color: var(--papel);
     background: repeating-linear-gradient(180deg, #A3164A 0, #8C0C3B 5px, #820933 12px, #6A0729 19px, #4A041B 22px); }
   .cab::after { content: ''; position: absolute; left: 0; right: 0; bottom: -10px; height: 10px; background: linear-gradient(#45091C, #1E0410); }
-  .cab p { font-family: 'Funnel Sans', sans-serif; font-weight: 600; font-size: clamp(.9rem, .8rem + .3vw, 1.05rem); color: var(--lima); line-height: 1.1; }
-  .cab strong { display: block; font-family: 'Funnel Display', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); color: var(--papel); line-height: 1.05; }
+  .cab p { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: clamp(.9rem, .8rem + .3vw, 1.05rem); color: var(--lima); line-height: 1.1; }
+  .cab strong { display: block; font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); color: var(--papel); line-height: 1.05; }
 
   .aviso { width: 100%; max-width: calc(1180px + 2 * var(--canal)); margin-inline: auto; padding: clamp(56px, 10svh, 104px) var(--canal) clamp(36px, 7svh, 80px);
     display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(40px, 7svh, 72px); align-items: center; }
   .aviso__texto { display: grid; gap: clamp(18px, 3svh, 28px); }
-  h1 { font-family: 'Funnel Display', sans-serif; font-weight: 700; color: var(--granate); font-size: clamp(1.75rem, 1.1rem + 2.4vw, 3.1rem); line-height: 1.12; text-wrap: balance; max-width: 19ch; }
+  h1 { font-family: 'Clash Display', sans-serif; font-weight: 600; color: var(--granate); font-size: clamp(1.75rem, 1.1rem + 2.4vw, 3.1rem); line-height: 1.12; text-wrap: balance; max-width: 19ch; }
   .mas { max-width: 34em; }
   .mas a { color: var(--granate); font-weight: 700; text-decoration: none; overflow-wrap: anywhere; display: inline-block;
     background: linear-gradient(var(--lima), var(--lima)) 0 100% / 100% 4px no-repeat; transition: background-size .45s var(--sale); }
@@ -79,7 +81,7 @@
 
     <figure class="miniatura">
       <span class="ventana" tabindex="0" aria-label="Miniatura de la home completa">
-        <img src="assets/img/home-miniatura.webp" width="480" height="3441" alt="Miniatura de la home propuesta para Persianas y Toldos Víctor, completa de arriba abajo" onerror="this.closest('figure').hidden = true">
+        <img src="assets/img/home-miniatura.webp" width="480" height="3050" alt="Miniatura de la home propuesta para Persianas y Toldos Víctor, completa de arriba abajo" onerror="this.closest('figure').hidden = true">
       </span>
     </figure>
   </main>
