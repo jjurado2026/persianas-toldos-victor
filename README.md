@@ -75,7 +75,7 @@ Parámetros útiles: `?ss` (sin animaciones, para capturas) · `?ahora=1-15` (fi
 El HTML se monta con `python _interno/ronda-2/montar.py` (plantilla + bloques que se conservan de la v1; las zonas pulsables de la fachada se generan ahí).
 
 ## Caducidad
-**Provisional, como si se enviara el 3-nov-2026:** la propuesta se ve hasta el **jueves 12 de noviembre de 2026 a las 23:59** (hora de Madrid). Desde el 13, `index.html` lleva a `caducada.html`: «No puedes ver esta página porque han pasado más de 10 días desde su envío. Si sigues con interés, escríbeme a jjuradogarciadelrio@gmail.com.» y la home entera en miniatura. La fecha está en el primer `<script>` de `index.html` (`Date.UTC(2026, 10, 12, 23, 0)`) y se ajusta al día real de envío. En local no caduca.
+**Envío previsto el jueves 5-nov-2026:** la propuesta se ve hasta el **sábado 14 de noviembre de 2026 a las 23:59** (hora de Madrid). Desde el 15, `index.html` lleva a `caducada.html`: «No puedes ver esta página porque han pasado más de 10 días desde su envío. Si sigues con interés, escríbeme a jjuradogarciadelrio@gmail.com.» y la home entera en miniatura. La fecha está en el primer `<script>` de `index.html` (`Date.UTC(2026, 10, 14, 23, 0)`); si el envío cambia, se ajusta ahí y en la última lámina de la propuesta. En local no caduca.
 
 ## Ver en local
 ```bash
