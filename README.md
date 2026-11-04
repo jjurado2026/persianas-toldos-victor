@@ -6,6 +6,21 @@ Prototipo de homepage para **Persianas y Toldos Víctor** ([persianasytoldosvict
 
 **El problema que resuelve:** su web es una plantilla de Elementor de 2023 cuyo título en Google sigue siendo «Just another WordPress site». El aviso de cookies tapa su formulario. El teléfono no se puede pulsar, la oferta del 20 % caducó en marzo de 2023 y no dice nada de reparaciones, que es la búsqueda más urgente del sector. Sus fotos de trabajos reales están al final y sin explicar.
 
+## Ronda 3 (4-nov-2026): últimos cambios
+
+- **Nuestros servicios:**
+  - **Pasan solos:** cada 5,2 s la ficha gira y da paso a la siguiente, y la pieza correspondiente se mueve en la fachada. Una barra en el pie marca el tiempo; con el cursor encima, se para.
+  - **Se eligen con un clic en el edificio:** cada pieza (el toldo del ático, cada ventana, el balcón, el bar, la reja…) se marca con su nombre bajo el cursor.
+  - **Al elegir uno**, su ficha se queda 12 s y luego siguen pasando solos.
+  - **Mismo tamaño:** el edificio y la ficha miden lo mismo de alto y de ancho, y todas las fichas son iguales.
+  - **Todas con foto:** cuadrada arriba, con el título y el texto encima, y «Pedir presupuesto» y «Llamar» debajo.
+  - **Fotos:**
+    - motorización, mosquiteras, rejas y ventanas: de Unsplash y **provisionales**, porque su web no tiene fotos de esos servicios;
+    - stores: una foto de su biblioteca de medios.
+    - Detalle en `_interno/imagenes/banco/LEEME.md`.
+- **Fuera «¿Se te ha roto la persiana?».** El acceso «Reparación» del hero lleva al presupuesto con «Reparación» ya escrito.
+- **Ofertas,** sobre rosa suave, para que no queden dos bandas blancas seguidas.
+
 ## Ronda 2 (3-nov-2026): «Persiana»
 
 Cambios pedidos por Pablo sobre la v1 «Mando» (etiqueta `v1-home`):
@@ -27,18 +42,22 @@ Cambios pedidos por Pablo sobre la v1 «Mando» (etiqueta `v1-home`):
 - **SEO:** su H1, su frase del hero y sus títulos de sección («Nuestros servicios», «Más de 60 años de experiencia», «Te asesoramos sin compromiso», «Que opina la gente de nosotros», «Nuestro trabajo»), con enlaces a sus páginas reales.
 
 ## Comprobado, no asumido
-Con el kit del taller (Chrome headless por DevTools):
-- **El hero cabe entero en los 17 tamaños**, de 320×568 a 2560×1440, también en móvil apaisado y descontando la barra fija.
-- Sin desbordamiento horizontal en ningún ancho, y las fotos del cliente a su proporción (10/10).
-- **68 pruebas de interacción con ratón, clics y teclado reales**, todas en verde (`_interno/herramientas/probar-r2.mjs`). Cubren:
+Con el kit del taller (Chrome headless por DevTools), ronda 3:
+- **El hero cabe entero en los 14 tamaños** del verificador, de 320×568 a 2560×1440, también en móvil apaisado y descontando la barra fija.
+- Sin desbordamiento horizontal en ningún ancho, y las fotos del cliente a su proporción (12/12 a 1440 y a 390).
+- **El edificio y la ficha miden lo mismo** (alto, ancho y borde de arriba) a 1440×900, 1280×720, 1024×768 y 1920×1080. Las diez fichas tienen la misma altura, en escritorio y en móvil.
+- **76 pruebas de interacción con ratón, clics y teclado reales**, todas en verde (`_interno/herramientas/probar-r3.mjs`, por grupos). Cubren:
   - la persiana del hero: cerrada al abrir, girando, inclinándose con el cursor y con su onda;
-  - **ningún botón coloreado en reposo** y el rodillo solo bajo el cursor;
+  - **ningún botón coloreado en reposo**, el rodillo solo bajo el cursor, y nada coloreado mientras los servicios pasan solos;
+  - los servicios, que pasan solos, se paran con el cursor encima, se eligen en la fachada o en la cinta y, al rato de elegir uno, siguen solos;
+  - las diez fotos de las fichas cargan;
   - las cuatro cintas, que se mueven despacio y se paran con el cursor;
-  - la fachada con la ficha centrada, las averías, las paletas de 1963 y las lamas de las preguntas;
+  - las paletas de 1963 y las lamas de las preguntas;
   - el formulario, que pide solo sus campos, y el visor;
-  - el móvil y el movimiento reducido;
-  - 19 botones con el cursor quieto 2,5 s: ninguno se queda pillado.
+  - el móvil (la ficha no queda bajo la barra de abajo) y el movimiento reducido;
+  - 19 botones y una pieza de la fachada con el cursor quieto 2,5 s: ninguno se queda pillado.
 - Cero errores de JavaScript, y solo se animan `transform` y `opacity`.
+- Primera vista: 614 KB a 1440 px. Solo se cargan la foto de la ficha visible y la de la siguiente.
 
 ## Validar con el cliente
 - La tilde: su web escribe «Victor»; la propuesta, «Víctor».
@@ -46,13 +65,14 @@ Con el kit del taller (Chrome headless por DevTools):
 - Que van a medir a domicilio y reparan persianas y toldos de cualquier marca, y su zona de trabajo («Valencia y alrededores»).
 - Si tienen un móvil con WhatsApp (hoy solo dan el fijo y el correo).
 - Su web no tiene favicon: el de la propuesta es provisional, con sus colores.
+- Fotos suyas de motorización, mosquiteras, rejas y ventanas para sustituir las provisionales de Unsplash.
 
 ## Stack
-HTML, CSS y JavaScript puro. Cero dependencias, cero build. Clash Display y Satoshi autoalojadas (120 KB, licencia ITF de Fontshare). Fachada y persiana por dentro en SVG dibujado a mano. Unos 390 KB la primera vista y 830 KB la página entera.
+HTML, CSS y JavaScript puro. Cero dependencias, cero build. Clash Display y Satoshi autoalojadas (120 KB, licencia ITF de Fontshare). Fachada en SVG dibujado a mano. Unos 610 KB la primera vista y 900 KB la página entera.
 
 Parámetros útiles: `?ss` (sin animaciones, para capturas) · `?ahora=1-15` (fija el día, de 0 domingo a 6 sábado, y la hora del horario) · `?caducada` (simula la caducidad).
 
-El HTML de esta ronda se monta con `python _interno/ronda-2/montar.py` (plantilla nueva + bloques que se conservan de la v1).
+El HTML se monta con `python _interno/ronda-2/montar.py` (plantilla + bloques que se conservan de la v1; las zonas pulsables de la fachada se generan ahí).
 
 ## Caducidad
 **Provisional, como si se enviara el 3-nov-2026:** la propuesta se ve hasta el **jueves 12 de noviembre de 2026 a las 23:59** (hora de Madrid). Desde el 13, `index.html` lleva a `caducada.html`: «No puedes ver esta página porque han pasado más de 10 días desde su envío. Si sigues con interés, escríbeme a jjuradogarciadelrio@gmail.com.» y la home entera en miniatura. La fecha está en el primer `<script>` de `index.html` (`Date.UTC(2026, 10, 12, 23, 0)`) y se ajusta al día real de envío. En local no caduca.
